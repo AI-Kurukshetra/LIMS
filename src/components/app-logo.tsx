@@ -9,9 +9,9 @@ export function AppLogo() {
       </div>
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#4f7a7f]">
-          NextGen
+          Laboratory Operations
         </p>
-        <p className="text-lg font-semibold tracking-tight text-[#12343b]">LIMS</p>
+        <p className="text-lg font-semibold tracking-tight text-[#12343b]">LabAxis</p>
       </div>
     </div>
   );

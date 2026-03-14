@@ -283,7 +283,7 @@ export function AuthForm() {
             id="email"
             type="email"
             autoComplete="email"
-            placeholder="scientist@nextgen-lims.com"
+            placeholder="scientist@labaxis.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required

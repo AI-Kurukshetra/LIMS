@@ -1,6 +1,6 @@
-# NextGen LIMS
+# LabAxis
 
-Laboratory Information Management System — Next.js (App Router), Supabase (auth + Postgres), role-based dashboards.
+Modern laboratory operations software built to manage samples, testing, reporting, inventory, and compliance in one place.
 
 ## Local development
 
@@ -20,7 +20,7 @@ Repo: [AI-Kurukshetra/LIMS](https://github.com/AI-Kurukshetra/LIMS)
 ```bash
 git init
 git add .
-git commit -m "Initial commit: NextGen LIMS"
+git commit -m "Initial commit: LabAxis"
 git branch -M main
 git remote add origin https://github.com/AI-Kurukshetra/LIMS.git
 git push -u origin main

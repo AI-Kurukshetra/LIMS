@@ -12,18 +12,18 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 const highlights = [
   {
-    title: "Lab operations in one place",
-    description: "Track samples, tests, results, reports, and inventory from one dashboard.",
+    title: "Connected operational control",
+    description: "Keep samples, testing activity, reports, and inventory aligned in one system.",
     icon: FlaskConical
   },
   {
-    title: "Simple day-to-day workflows",
-    description: "Follow registration, testing, review, and reporting with less confusion.",
+    title: "Faster daily execution",
+    description: "Move from registration to review with clear status, ownership, and traceability.",
     icon: ClipboardList
   },
   {
-    title: "Built for multiple user groups",
-    description: "Useful for doctors, lab staff, reviewers, and client-facing teams.",
+    title: "Built for every lab stakeholder",
+    description: "Support managers, scientists, reviewers, quality teams, and clients with focused workspaces.",
     icon: Users
   }
 ];
@@ -49,14 +49,14 @@ export default async function LoginPage({
         <AppLogo />
         <div className="space-y-5">
           <p className="font-mono text-sm uppercase tracking-[0.28em] text-slate-500">
-            Laboratory Information Management System
+            Laboratory Operations Platform
           </p>
           <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-slate-950">
-            NextGen LIMS gives lab teams and doctors one simple place to manage work.
+            Run laboratory operations from sample intake to final report in LabAxis.
           </h1>
           <p className="max-w-2xl text-lg leading-8 text-slate-600">
-            Use this screen to enter the workspace, create an account, and continue daily
-            laboratory work without technical complexity.
+            LabAxis gives commercial, diagnostic, and research laboratories a clear system for
+            testing workflows, reporting, inventory visibility, and compliance-ready execution.
           </p>
         </div>
 
@@ -86,12 +86,12 @@ export default async function LoginPage({
         <div className="rounded-2xl border border-dashed border-border bg-white/60 p-5 text-sm text-slate-600">
           <div className="flex items-center gap-2 font-semibold text-slate-950">
             <CheckCircle2 className="h-4 w-4" />
-            Simple access for all users
+            Designed for adoption
           </div>
           <p className="mt-2 leading-6">
-            This workspace is designed to be simple for laboratory teams and business users.
-            Its direction is aligned with modern scientific informatics needs such as
-            structured workflows, instrument-driven operations, and reviewable results.
+            The sign-in experience is intentionally straightforward so teams can adopt the platform
+            quickly while still supporting structured workflows, controlled reviews, and
+            operational accountability.
           </p>
         </div>
         {showProfileError ? (
@@ -104,9 +104,9 @@ export default async function LoginPage({
 
       <Card className="w-full border-white/80 bg-white/90">
         <CardHeader>
-          <CardTitle>Login or create your account</CardTitle>
+          <CardTitle>Access your LabAxis workspace</CardTitle>
           <CardDescription>
-            Use your email and password to open the correct role-based workspace.
+            Sign in or create an account to open the right role-based environment.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">

@@ -17,60 +17,63 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const highlights = [
   {
-    title: "Sample and patient work in one place",
-    description: "Keep sample details, testing steps, results, and reports connected in one system.",
+    title: "Connected sample lifecycle",
+    description:
+      "Track intake, testing, review, and release in one operational flow without fragmented tools.",
     icon: TestTube2
   },
   {
-    title: "Easy for every user role",
-    description: "Designed for doctors, lab teams, reviewers, and client users with simple screens.",
+    title: "Role-based clarity",
+    description:
+      "Give each team a focused workspace while leadership keeps visibility across the full lab.",
     icon: UserRound
   },
   {
-    title: "Clear and traceable work",
-    description: "Help teams follow each step with status tracking, reviews, and controlled access.",
+    title: "Audit-ready execution",
+    description:
+      "Support traceability, controlled reviews, and compliance-driven operations from day one.",
     icon: ShieldCheck
   }
 ];
 
 const platformAreas = [
   {
-    title: "Scientific informatics foundation",
+    title: "Operational data foundation",
     description:
-      "Bring samples, methods, results, specifications, and reporting into a single operational model.",
+      "Bring samples, methods, results, specifications, and reporting into a single source of truth.",
     icon: DatabaseZap
   },
   {
-    title: "Instrument-aware workflows",
+    title: "Workflow control across the bench",
     description:
-      "Support analyzers, sequencers, and lab equipment with clear run status, calibration, and handoff checkpoints.",
+      "Coordinate analyzers, handoffs, and lab activities with visible status, checkpoints, and ownership.",
     icon: FlaskConical
   },
   {
-    title: "Quality and compliance controls",
+    title: "Quality and compliance by design",
     description:
-      "Keep audit readiness in focus with controlled review steps, traceability, and role-based access.",
+      "Embed review steps, traceability, and access control into the platform instead of managing them manually.",
     icon: ShieldCheck
   }
 ];
 
 const useCases = [
   {
-    title: "Why labs use this portal",
+    title: "Why buyers choose LabAxis",
     description:
-      "It reduces status confusion by keeping sample intake, report drafting, doctor review, and client visibility in one connected workflow.",
+      "It replaces status confusion and disconnected spreadsheets with one system for operational control.",
     icon: ClipboardCheck
   },
   {
-    title: "What the portal includes",
+    title: "What the platform covers",
     description:
-      "Core modules cover sample registration, testing progress, report entry, doctor assignment, approvals, and released reports.",
+      "Core workflows include sample registration, testing progress, reporting, approvals, inventory, and client access.",
     icon: Microscope
   },
   {
-    title: "Who can use it",
+    title: "Who it is built for",
     description:
-      "Admins, lab managers, doctors, lab assistants, QC managers, and clients each see a focused workspace built for their role.",
+      "Lab managers, scientists, reviewers, quality teams, and clients each work inside a purpose-built interface.",
     icon: FileText
   }
 ];
@@ -98,14 +101,14 @@ export default function HomePage() {
         <section className="grid flex-1 items-center gap-12 py-20 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <p className="font-mono text-sm uppercase tracking-[0.3em] text-[#4f7a7f]">
-              Laboratory Portal And Management System
+              Laboratory Operations Platform
             </p>
             <h1 className="mt-6 max-w-3xl text-5xl font-semibold tracking-tight text-[#12343b] sm:text-6xl">
-              Launch laboratory operations, doctor review, and client reporting from one clean portal.
+              Run the modern laboratory from sample intake to signed report.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#55797c]">
-              This launch page explains what the product does, why labs need it, and who should
-              use each workspace before they sign in.
+              LabAxis gives growing laboratories one platform for operational control, testing
+              workflows, reporting, inventory visibility, and compliance-ready execution.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <Button asChild size="lg">
@@ -119,10 +122,10 @@ export default function HomePage() {
               </Button>
             </div>
             <div className="mt-8 rounded-2xl border border-white/70 bg-white/70 p-5 text-sm leading-6 text-[#55797c] shadow-soft">
-              <p className="font-semibold text-[#12343b]">Basic portal purpose</p>
+              <p className="font-semibold text-[#12343b]">Why LabAxis stands out</p>
               <p className="mt-2">
-                The product helps laboratories manage sample flow, report preparation, doctor
-                review, approvals, and client report access from one controlled platform.
+                LabAxis combines sample management, testing operations, reporting, inventory, and
+                compliance workflows in one product buyers can understand immediately.
               </p>
             </div>
           </div>
@@ -130,10 +133,10 @@ export default function HomePage() {
           <Card className="border-white/70 bg-white/85 shadow-soft">
             <CardContent className="grid gap-6 p-6">
               <div className="rounded-2xl bg-gradient-to-br from-[#0f4650] via-[#12616b] to-[#2f9e9a] p-6 text-white">
-                <p className="text-sm text-[#d6f4f2]">Main launch page</p>
+                <p className="text-sm text-[#d6f4f2]">LabAxis platform</p>
                 <div className="mt-4 flex items-end gap-3">
-                  <span className="text-5xl font-semibold">Labs</span>
-                  <span className="pb-2 text-sm text-[#d5ffbf]">reports, reviews, and portal access</span>
+                  <span className="text-5xl font-semibold">LabAxis</span>
+                  <span className="pb-2 text-sm text-[#d5ffbf]">control, quality, and reporting</span>
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
@@ -160,15 +163,14 @@ export default function HomePage() {
         <section className="pb-16">
           <div className="max-w-3xl">
             <p className="font-mono text-sm uppercase tracking-[0.28em] text-[#4f7a7f]">
-              Launch Overview
+              Product Overview
             </p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-[#12343b]">
-              A founder-friendly home screen that explains the portal before the user signs in.
+              A product story that feels credible before the buyer ever signs in.
             </h2>
             <p className="mt-4 text-lg leading-8 text-[#55797c]">
-              The first screen should make it clear that laboratories can use the product for
-              sample handling, doctors can review assigned reports, lab assistants can update
-              processing details, and clients can only see their own released reports.
+              The homepage now positions LabAxis as a sellable laboratory operations platform with
+              clear business value, clear workflow coverage, and clear audience fit across the lab.
             </p>
           </div>
 
