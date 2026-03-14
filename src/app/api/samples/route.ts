@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { getApiSessionProfile } from "@/lib/auth";
-import { createRecord, getRecords } from "@/lib/samples";
+import {
+  addSampleCustodyEvent,
+  createRecord,
+  getRecords,
+  samplePriorities
+} from "@/lib/samples";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET() {
@@ -38,11 +43,31 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
-  if (!body.sampleName || !body.sampleType || !body.clientId || !body.testType) {
+  if (
+    !body.sampleName ||
+    !body.sampleType ||
+    !body.clientId ||
+    !body.testType ||
+    !body.priority ||
+    !body.receivedAt
+  ) {
     return NextResponse.json(
-      { error: "Sample name, sample type, client, and test type are required." },
+      {
+        error:
+          "Sample name, sample type, client, test type, priority, and received date are required."
+      },
       { status: 400 }
     );
+  }
+
+  if (!samplePriorities.includes(body.priority)) {
+    return NextResponse.json({ error: "Invalid sample priority." }, { status: 400 });
+  }
+
+  const receivedAt = new Date(body.receivedAt);
+
+  if (Number.isNaN(receivedAt.getTime())) {
+    return NextResponse.json({ error: "Invalid received date and time." }, { status: 400 });
   }
 
   const supabase = createSupabaseServerClient();
@@ -51,6 +76,11 @@ export async function POST(request: Request) {
     sampleType: body.sampleType,
     clientId: body.clientId,
     testType: body.testType,
+    priority: body.priority,
+    receivedAt: receivedAt.toISOString(),
+    barcodeValue: body.barcodeValue ?? null,
+    sourceLabel: body.sourceLabel ?? null,
+    currentLocation: body.currentLocation ?? null,
     assignedScientistId: body.assignedScientistId ?? null,
     createdBy: session.profile.id
   });
@@ -62,9 +92,17 @@ export async function POST(request: Request) {
   await supabase.from("sample_activities").insert({
     sample_id: data.id,
     action: "Sample created",
-    detail: `Sample created by ${session.profile.full_name || session.profile.email}.`,
+    detail: `Sample ${data.accession_number} created by ${session.profile.full_name || session.profile.email}.`,
     status: data.status,
     created_by: session.profile.id
+  });
+
+  await addSampleCustodyEvent(supabase, {
+    sampleId: data.id,
+    eventType: "received",
+    location: data.current_location,
+    notes: "Sample received and registered in the system.",
+    createdBy: session.profile.id
   });
 
   return NextResponse.json({ data }, { status: 201 });

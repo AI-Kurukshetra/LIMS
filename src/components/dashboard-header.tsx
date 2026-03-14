@@ -1,5 +1,7 @@
 "use client";
 
+import { FormEvent, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Bell, Menu, Search } from "lucide-react";
 
 import { AppSidebar } from "@/components/app-sidebar";
@@ -35,6 +37,33 @@ export function DashboardHeader({
   userName: string;
   userRole: AppRole;
 }) {
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const canSearchSamples = ["lab_manager", "scientist", "client"].includes(userRole);
+
+  async function handleSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const query = searchTerm.trim();
+
+    if (!query || !canSearchSamples) {
+      return;
+    }
+
+    const response = await fetch(`/api/search/samples?q=${encodeURIComponent(query)}`);
+    const payload = await response.json();
+
+    startTransition(() => {
+      if (response.ok && payload.exactMatchId) {
+        router.push(`/samples/${payload.exactMatchId}`);
+        return;
+      }
+
+      router.push(`/samples?query=${encodeURIComponent(query)}`);
+    });
+  }
+
   return (
     <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-border/70 bg-background/80 px-4 py-4 backdrop-blur-xl lg:px-8">
       <div className="lg:hidden">
@@ -53,10 +82,18 @@ export function DashboardHeader({
           </SheetContent>
         </Sheet>
       </div>
-      <div className="relative hidden max-w-md flex-1 lg:block">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6e9092]" />
-        <Input className="pl-10" placeholder="Search samples, reports, clients, or doctor assignments" />
-      </div>
+      {canSearchSamples ? (
+        <form className="relative hidden max-w-md flex-1 lg:block" onSubmit={handleSearch}>
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6e9092]" />
+          <Input
+            className="pl-10"
+            placeholder="Search sample number, name, barcode, or location"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            disabled={isPending}
+          />
+        </form>
+      ) : null}
       <div className="ml-auto flex items-center gap-3">
         <Button variant="outline" size="icon">
           <Bell className="h-4 w-4" />

@@ -19,7 +19,7 @@ export default async function CreateSamplePage() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-[#12343b]">Create Sample</h1>
           <p className="mt-2 text-sm leading-6 text-[#55797c]">
-            Register a sample, connect it to a client, and optionally assign a scientist.
+            Register a sample, capture its intake details, and start the tracking history from receipt.
           </p>
         </div>
         <Button asChild variant="outline">

@@ -10,7 +10,8 @@ const statusClasses: Record<SampleStatus, string> = {
   in_testing: "border-amber-200 bg-amber-50 text-amber-700",
   qc_review: "border-violet-200 bg-violet-50 text-violet-700",
   approved: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  completed: "border-teal-200 bg-teal-50 text-teal-700"
+  completed: "border-teal-200 bg-teal-50 text-teal-700",
+  disposed: "border-slate-300 bg-slate-100 text-slate-700"
 };
 
 export function SampleStatusBadge({ status }: SampleStatusBadgeProps) {

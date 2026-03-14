@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, FilePlus2, FlaskConical, TestTube2 } from "lucide-react";
+import { ArrowRight, FilePlus2, FlaskConical, MapPin, TestTube2 } from "lucide-react";
 
 import { DataTable } from "@/components/dashboard/data-table";
 import { StatCard } from "@/components/dashboard/stat-card";
@@ -9,12 +9,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { requireUserProfile } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { getRecords, type SampleStatus, type SampleSummary } from "@/lib/samples";
+import {
+  getSamplePriorityLabel,
+  getRecords,
+  searchRecords,
+  type SampleStatus,
+  type SampleSummary
+} from "@/lib/samples";
 
-export default async function SamplesPage() {
+export default async function SamplesPage({
+  searchParams
+}: {
+  searchParams?: { query?: string };
+}) {
   const { profile } = await requireUserProfile(["lab_manager", "scientist", "client"]);
   const supabase = createSupabaseServerClient();
-  const { data } = await getRecords(supabase, profile);
+  const query = searchParams?.query?.trim() ?? "";
+  const { data } = query
+    ? await searchRecords(supabase, profile, { searchTerm: query })
+    : await getRecords(supabase, profile);
   const samples: SampleSummary[] = data;
 
   const statusCounts = samples.reduce(
@@ -27,19 +40,22 @@ export default async function SamplesPage() {
       in_testing: 0,
       qc_review: 0,
       approved: 0,
-      completed: 0
+      completed: 0,
+      disposed: 0
     }
   );
 
   const rows = samples.map((sample: SampleSummary) => [
     <Link key={`${sample.id}-link`} href={`/samples/${sample.id}`} className="font-semibold text-[#145761] underline-offset-4 hover:underline">
-      {sample.id.slice(0, 8)}
+      {sample.accession_number}
     </Link>,
     sample.sample_name,
     sample.client?.full_name ?? "Unknown client",
     sample.test_type,
+    sample.current_location ?? "Not set",
+    getSamplePriorityLabel(sample.priority),
     <SampleStatusBadge key={`${sample.id}-status`} status={sample.status} />,
-    new Date(sample.created_at).toLocaleDateString()
+    new Date(sample.received_at).toLocaleDateString()
   ]);
 
   return (
@@ -50,21 +66,29 @@ export default async function SamplesPage() {
             Sample Management
           </Badge>
           <h1 className="text-4xl font-semibold tracking-tight text-[#12343b]">
-            Sample operations for {profile.full_name || profile.email}
+            {query ? `Search results for "${query}"` : `Sample operations for ${profile.full_name || profile.email}`}
           </h1>
           <p className="max-w-3xl text-base leading-7 text-[#55797c]">
-            This module lets the lab manager create and manage samples, while scientists and
-            clients only see the records visible to their role.
+            {query
+              ? "The list below shows only the samples matching your search and visible to your role."
+              : "This module lets the lab manager create and manage samples, while scientists and clients only see the records visible to their role."}
           </p>
         </div>
-        {profile.role === "lab_manager" ? (
+        <div className="flex items-center gap-3">
+          {query ? (
+            <Button asChild variant="outline" size="lg">
+              <Link href="/samples">Clear Search</Link>
+            </Button>
+          ) : null}
+          {profile.role === "lab_manager" ? (
           <Button asChild size="lg">
             <Link href="/samples/create">
               Create Sample
               <FilePlus2 className="ml-2 h-4 w-4" />
             </Link>
           </Button>
-        ) : null}
+          ) : null}
+        </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
@@ -79,17 +103,30 @@ export default async function SamplesPage() {
           note="Samples still moving through the lab process."
         />
         <StatCard
-          label="Ready or done"
-          value={String(statusCounts.approved + statusCounts.completed)}
-          note="Samples already approved or fully completed."
+          label="Closed lifecycle"
+          value={String(statusCounts.completed + statusCounts.disposed)}
+          note="Samples fully completed or disposed at the end of retention."
         />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <DataTable
-          title="Samples List"
-          description="This table shows sample id, client, test type, current status, and creation date."
-          columns={["Sample ID", "Sample Name", "Client", "Test Type", "Status", "Created Date"]}
+          title={query ? "Search Results" : "Samples List"}
+          description={
+            query
+              ? "These are the matching samples you are allowed to see."
+              : "This table shows the sample number, client, location, priority, status, and received date."
+          }
+          columns={[
+            "Sample Number",
+            "Sample Name",
+            "Client",
+            "Test Type",
+            "Location",
+            "Priority",
+            "Status",
+            "Received Date"
+          ]}
           rows={rows}
         />
 
@@ -111,7 +148,7 @@ export default async function SamplesPage() {
                 <TestTube2 className="h-5 w-5 text-[#145761]" />
                 <p className="font-medium text-[#12343b]">Scientist</p>
               </div>
-              <p className="mt-2">Only sees samples assigned to their scientist profile.</p>
+              <p className="mt-2">Only sees samples assigned to their scientist profile with read-only tracking details.</p>
             </div>
             <div className="rounded-2xl bg-[#e8f5f3] p-4">
               <div className="flex items-center gap-3">
@@ -119,6 +156,13 @@ export default async function SamplesPage() {
                 <p className="font-medium text-[#12343b]">Client</p>
               </div>
               <p className="mt-2">Only sees their own samples and cannot change any record.</p>
+            </div>
+            <div className="rounded-2xl bg-[#e8f5f3] p-4">
+              <div className="flex items-center gap-3">
+                <MapPin className="h-5 w-5 text-[#145761]" />
+                <p className="font-medium text-[#12343b]">Tracking view</p>
+              </div>
+              <p className="mt-2">Everyone with access can now see the sample number, current location, and tracking history clearly.</p>
             </div>
           </CardContent>
         </Card>

@@ -27,7 +27,7 @@ export type AppRole = (typeof appRoles)[number];
 export const roleLabels: Record<AppRole, string> = {
   admin: "Admin",
   lab_manager: "Lab Manager",
-  scientist: "Doctor",
+  scientist: "Scientist",
   technician: "Lab Assistant",
   qc_manager: "QC Manager",
   client: "Client"
@@ -86,7 +86,7 @@ export const roleDashboardContent: Record<
       "Manage platform settings, user access, and reporting controls for the full LIMS environment.",
     workspaceLabel: "System control",
     persona: "Platform owner",
-    summary: "Oversees users, settings, audit posture, and report governance.",
+    summary: "Use this area to manage users, settings, and system-level reports.",
     metrics: [
       { label: "Active users", value: "38", note: "Across all business units" },
       { label: "Reports released", value: "214", note: "Last 30 days" },
@@ -103,20 +103,20 @@ export const roleDashboardContent: Record<
     ],
     navigation: [
       {
-        title: "System settings",
-        description: "Review global configuration, security defaults, and operational options.",
+        title: "Settings",
+        description: "Manage system settings and platform configuration.",
         href: "/admin/settings",
         icon: Settings2
       },
       {
-        title: "User administration",
-        description: "Monitor accounts, profile assignments, and future permission changes.",
+        title: "Users",
+        description: "Manage user accounts, roles, and access permissions.",
         href: "/admin/users",
         icon: Users2
       },
       {
         title: "Reports",
-        description: "Open the reporting area used for system-wide visibility and exports.",
+        description: "View system-wide reports and exported summaries.",
         href: "/admin/reports",
         icon: FileText
       }
@@ -128,7 +128,7 @@ export const roleDashboardContent: Record<
       "Oversee workflows, sample movement, and team execution across the daily operations pipeline.",
     workspaceLabel: "Operations command",
     persona: "Laboratory manager",
-    summary: "Tracks intake, assignments, pending reports, and team throughput.",
+    summary: "Use this menu to follow samples, assignments, and daily lab work.",
     metrics: [
       { label: "Samples today", value: "126", note: "Registered since shift start" },
       { label: "Pending review", value: "19", note: "Doctor-facing reports waiting" },
@@ -145,22 +145,10 @@ export const roleDashboardContent: Record<
     ],
     navigation: [
       {
-        title: "Operations dashboard",
-        description: "Watch intake, queues, reviews, and throughput from one shared control page.",
-        href: "/dashboard",
-        icon: LayoutGrid
-      },
-      {
-        title: "Sample workspace",
-        description: "Track samples, assignments, and status updates across the lab lifecycle.",
+        title: "Sample Tracking",
+        description: "Create samples and follow their status, location, and history.",
         href: "/samples",
         icon: TestTube2
-      },
-      {
-        title: "Manager home",
-        description: "Return to the manager-specific dashboard at any time.",
-        href: "/manager/dashboard",
-        icon: ClipboardCheck
       }
     ]
   },
@@ -169,8 +157,8 @@ export const roleDashboardContent: Record<
     description:
       "Use this role for doctor-facing review, client report interpretation, and assigned medical result checks.",
     workspaceLabel: "Doctor review",
-    persona: "Doctor or medical reviewer",
-    summary: "Sees assigned client reports, reviews findings, and checks doctor-ready summaries.",
+    persona: "Scientist or reviewer",
+    summary: "Use this menu to review assigned work and open linked sample records.",
     metrics: [
       { label: "Assigned reports", value: "11", note: "Need doctor review" },
       { label: "Clients covered", value: "7", note: "Active patient groups" },
@@ -187,14 +175,8 @@ export const roleDashboardContent: Record<
     ],
     navigation: [
       {
-        title: "Assigned reports",
-        description: "Open the report list that belongs to the current doctor reviewer.",
-        href: "/scientist/dashboard",
-        icon: FileText
-      },
-      {
-        title: "Client-linked samples",
-        description: "Check underlying samples related to the doctor&apos;s assigned report queue.",
+        title: "My Samples",
+        description: "See only the samples assigned to you for review or testing.",
         href: "/samples",
         icon: Stethoscope
       }
@@ -206,7 +188,7 @@ export const roleDashboardContent: Record<
       "Use this role for sample registration, report detail entry, doctor assignment, and status handling at the bench level.",
     workspaceLabel: "Bench operations",
     persona: "Lab assistant",
-    summary: "Manages sample status, prepares report details, and records the doctor assignment.",
+    summary: "Use this menu for sample intake, bench work, and pending handoffs.",
     metrics: [
       { label: "Samples received", value: "42", note: "Current shift" },
       { label: "Reports drafting", value: "14", note: "Need detail entry" },
@@ -223,22 +205,10 @@ export const roleDashboardContent: Record<
     ],
     navigation: [
       {
-        title: "Sample registration",
-        description: "Access the shared sample intake workspace used by the operations team.",
-        href: "/samples",
-        icon: TestTube2
-      },
-      {
-        title: "Bench dashboard",
-        description: "Return to the lab assistant dashboard and status summary.",
+        title: "Bench Work",
+        description: "See your bench dashboard and daily work summary.",
         href: "/technician/dashboard",
         icon: FlaskConical
-      },
-      {
-        title: "Pending handoff",
-        description: "Check reports waiting for doctor assignment or final detail completion.",
-        href: "/samples",
-        icon: Truck
       }
     ]
   },
@@ -248,7 +218,7 @@ export const roleDashboardContent: Record<
       "Review deviations, approvals, and release decisions with controls focused on QA oversight.",
     workspaceLabel: "Quality oversight",
     persona: "QC manager",
-    summary: "Approves release readiness, deviation handling, and quality checkpoints.",
+    summary: "Use this area to review approvals, deviations, and release decisions.",
     metrics: [
       { label: "Pending approvals", value: "8", note: "Waiting QC sign-off" },
       { label: "Open deviations", value: "2", note: "Require action plan" },
@@ -265,16 +235,10 @@ export const roleDashboardContent: Record<
     ],
     navigation: [
       {
-        title: "QC approvals",
-        description: "Open the quality control review area for release and approval checkpoints.",
+        title: "Quality Review",
+        description: "Open quality checks, approvals, and release review items.",
         href: "/qc",
         icon: ShieldCheck
-      },
-      {
-        title: "QC home",
-        description: "Return to the quality control dashboard and pending approval view.",
-        href: "/qc/dashboard",
-        icon: ClipboardCheck
       }
     ]
   },
@@ -284,7 +248,7 @@ export const roleDashboardContent: Record<
       "Track sample status and published reports from a simplified portal experience.",
     workspaceLabel: "Client portal",
     persona: "Client user",
-    summary: "Only sees their own sample progress and the reports released to their account.",
+    summary: "Use this menu to check your sample status and download released reports.",
     metrics: [
       { label: "My reports", value: "5", note: "Available for download" },
       { label: "In progress", value: "2", note: "Samples still under testing" },
@@ -301,22 +265,16 @@ export const roleDashboardContent: Record<
     ],
     navigation: [
       {
-        title: "Client portal",
-        description: "View status updates and shared reports intended for external clients.",
+        title: "My Reports",
+        description: "View and download reports released to your account.",
         href: "/client",
         icon: FileText
       },
       {
         title: "My samples",
-        description: "View only the samples that belong to the signed-in client account.",
+        description: "Track only the samples that belong to your account.",
         href: "/samples",
         icon: ClipboardCheck
-      },
-      {
-        title: "Client home",
-        description: "Return to the client dashboard and portal summary.",
-        href: "/client/dashboard",
-        icon: LayoutGrid
       }
     ]
   }

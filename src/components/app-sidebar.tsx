@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  ChevronRight,
   LayoutGrid
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -24,12 +23,12 @@ export function AppSidebar({
   const homeHref = role === "admin" || role === "lab_manager" ? "/dashboard" : `/${role === "qc_manager" ? "qc" : role}/dashboard`;
   const navigation = [
     {
-      title: "Home",
+      title: "Dashboard",
       href: homeHref,
-      description: "Return to the main workspace for this signed-in role.",
+      description: "Open the main screen for your role.",
       icon: LayoutGrid
     },
-    ...content.navigation
+    ...content.navigation.filter((item) => item.href !== homeHref)
   ];
 
   return (
@@ -41,14 +40,11 @@ export function AppSidebar({
     >
       <AppLogo />
       <div className="mt-8 rounded-2xl border border-[#1f5962]/10 bg-[#12353d] p-5 text-white shadow-soft">
-        <Badge variant="success" className="mb-3 border-0 bg-[#6fe0d3]/15 text-[#b9fff6]">
+        <Badge variant="success" className="border-0 bg-[#6fe0d3]/15 text-[#b9fff6]">
           {roleLabels[role]}
         </Badge>
-        <p className="text-sm leading-6 text-[#d5ebe8]">
-          {content.summary}
-        </p>
       </div>
-      <nav className="mt-8 space-y-1">
+      <nav className="mt-6 space-y-2">
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -65,30 +61,16 @@ export function AppSidebar({
               )}
             >
               <Icon className="h-4 w-4" />
-              <div className="flex-1">
-                <p>{item.title}</p>
-                <p
-                  className={cn(
-                    "mt-0.5 text-xs leading-5",
-                    isActive ? "text-[#d5ebe8]" : "text-[#6c8d90]"
-                  )}
-                >
-                  {item.description}
-                </p>
-              </div>
-              <ChevronRight className="h-4 w-4" />
+              <span>{item.title}</span>
             </Link>
           );
         })}
       </nav>
       <div className="mt-auto rounded-2xl border border-dashed border-border bg-white/70 p-4">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#4f7a7f]">
-          Who Can Use This
+          Role
         </p>
         <p className="mt-2 text-sm font-medium text-[#12343b]">{content.persona}</p>
-        <p className="mt-1 text-sm text-[#55797c]">
-          This navigation is trimmed so the user sees only the workflows expected for this role.
-        </p>
       </div>
     </aside>
   );

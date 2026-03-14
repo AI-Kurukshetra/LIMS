@@ -6,8 +6,10 @@ import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   getSampleStatusLabel,
   sampleStatuses,
@@ -17,12 +19,16 @@ import {
 
 type SampleStatusFormValues = {
   status: SampleStatus;
+  currentLocation: string;
+  disposalReason: string;
   assignedScientistId: string;
 };
 
 type SampleStatusFormProps = {
   sampleId: string;
   currentStatus: SampleStatus;
+  currentLocation: string | null;
+  disposalReason: string | null;
   currentScientistId: string | null;
   scientists: SampleFormOption[];
 };
@@ -30,6 +36,8 @@ type SampleStatusFormProps = {
 export function SampleStatusForm({
   sampleId,
   currentStatus,
+  currentLocation,
+  disposalReason,
   currentScientistId,
   scientists
 }: SampleStatusFormProps) {
@@ -38,16 +46,25 @@ export function SampleStatusForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { isSubmitting }
   } = useForm<SampleStatusFormValues>({
     defaultValues: {
       status: currentStatus,
+      currentLocation: currentLocation ?? "",
+      disposalReason: disposalReason ?? "",
       assignedScientistId: currentScientistId ?? ""
     }
   });
+  const selectedStatus = watch("status");
 
   async function onSubmit(values: SampleStatusFormValues) {
     setFormError(null);
+
+    if (values.status === "disposed" && !values.disposalReason.trim()) {
+      setFormError("Please enter the reason before disposing the sample.");
+      return;
+    }
 
     const response = await fetch(`/api/samples/${sampleId}`, {
       method: "PATCH",
@@ -56,6 +73,8 @@ export function SampleStatusForm({
       },
       body: JSON.stringify({
         status: values.status,
+        currentLocation: values.currentLocation || null,
+        disposalReason: values.status === "disposed" ? values.disposalReason : null,
         assignedScientistId: values.assignedScientistId || null
       })
     });
@@ -75,7 +94,7 @@ export function SampleStatusForm({
       <CardHeader>
         <CardTitle>Status Update</CardTitle>
         <CardDescription>
-          Only the lab manager can move the sample forward or change scientist assignment.
+          The lab manager controls sample status, location, disposal, and scientist assignment.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -92,6 +111,15 @@ export function SampleStatusForm({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="currentLocation">Current Location</Label>
+            <Input
+              id="currentLocation"
+              placeholder="Testing Bench / Freezer 2 / Dispatch Shelf"
+              {...register("currentLocation")}
+            />
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="assignedScientistId">Assigned Scientist</Label>
             <Select id="assignedScientistId" {...register("assignedScientistId")}>
               <option value="">Assign later</option>
@@ -102,6 +130,20 @@ export function SampleStatusForm({
               ))}
             </Select>
           </div>
+
+          {selectedStatus === "disposed" ? (
+            <div className="space-y-2">
+              <Label htmlFor="disposalReason">Disposal Reason</Label>
+              <Textarea
+                id="disposalReason"
+                placeholder="Expired sample / insufficient volume / retention period completed"
+                {...register("disposalReason")}
+              />
+              <p className="text-sm text-[#6b8f92]">
+                This reason is saved as part of the lifecycle audit trail.
+              </p>
+            </div>
+          ) : null}
 
           {formError ? (
             <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">

@@ -9,13 +9,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
-import type { SampleFormOption } from "@/lib/samples";
+import {
+  getSamplePriorityLabel,
+  samplePriorities,
+  type SampleFormOption,
+  type SamplePriority
+} from "@/lib/samples";
 
 type SampleCreateFormValues = {
   sampleName: string;
   sampleType: string;
   clientId: string;
   testType: string;
+  priority: SamplePriority;
+  receivedAt: string;
+  barcodeValue: string;
+  sourceLabel: string;
+  currentLocation: string;
   assignedScientistId: string;
 };
 
@@ -23,6 +33,13 @@ type SampleCreateFormProps = {
   clients: SampleFormOption[];
   scientists: SampleFormOption[];
 };
+
+function getDefaultReceivedAtValue() {
+  const now = new Date();
+  const timezoneOffset = now.getTimezoneOffset() * 60_000;
+
+  return new Date(now.getTime() - timezoneOffset).toISOString().slice(0, 16);
+}
 
 export function SampleCreateForm({ clients, scientists }: SampleCreateFormProps) {
   const router = useRouter();
@@ -37,6 +54,11 @@ export function SampleCreateForm({ clients, scientists }: SampleCreateFormProps)
       sampleType: "",
       clientId: "",
       testType: "",
+      priority: "routine",
+      receivedAt: getDefaultReceivedAtValue(),
+      barcodeValue: "",
+      sourceLabel: "",
+      currentLocation: "",
       assignedScientistId: ""
     }
   });
@@ -54,6 +76,11 @@ export function SampleCreateForm({ clients, scientists }: SampleCreateFormProps)
         sampleType: values.sampleType,
         clientId: values.clientId,
         testType: values.testType,
+        priority: values.priority,
+        receivedAt: new Date(values.receivedAt).toISOString(),
+        barcodeValue: values.barcodeValue || null,
+        sourceLabel: values.sourceLabel || null,
+        currentLocation: values.currentLocation || null,
         assignedScientistId: values.assignedScientistId || null
       })
     });
@@ -75,11 +102,23 @@ export function SampleCreateForm({ clients, scientists }: SampleCreateFormProps)
       <CardHeader>
         <CardTitle>Create Sample</CardTitle>
         <CardDescription>
-          This form is used by the lab manager to register a new sample record.
+          This form is used by the lab manager to register a new sample and start its tracking history.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-5 md:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-2">
+            <Label htmlFor="receivedAt">Received Date And Time</Label>
+            <Input
+              id="receivedAt"
+              type="datetime-local"
+              {...register("receivedAt", { required: "Received date and time is required." })}
+            />
+            {errors.receivedAt ? (
+              <p className="text-sm text-rose-600">{errors.receivedAt.message}</p>
+            ) : null}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="sampleName">Sample Name</Label>
             <Input
@@ -105,6 +144,18 @@ export function SampleCreateForm({ clients, scientists }: SampleCreateFormProps)
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="sourceLabel">Sample Source</Label>
+            <Input
+              id="sourceLabel"
+              placeholder="Ward A / External Clinic"
+              {...register("sourceLabel")}
+            />
+            <p className="text-sm text-[#6b8f92]">
+              Use plain words so non-technical staff can identify where the sample came from.
+            </p>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="clientId">Client</Label>
             <Select
               id="clientId"
@@ -123,6 +174,20 @@ export function SampleCreateForm({ clients, scientists }: SampleCreateFormProps)
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="priority">Priority</Label>
+            <Select
+              id="priority"
+              {...register("priority", { required: "Priority is required." })}
+            >
+              {samplePriorities.map((priority) => (
+                <option key={priority} value={priority}>
+                  {getSamplePriorityLabel(priority)}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="testType">Test Type</Label>
             <Input
               id="testType"
@@ -132,6 +197,27 @@ export function SampleCreateForm({ clients, scientists }: SampleCreateFormProps)
             {errors.testType ? (
               <p className="text-sm text-rose-600">{errors.testType.message}</p>
             ) : null}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="barcodeValue">Barcode Value</Label>
+            <Input
+              id="barcodeValue"
+              placeholder="BC-20260314-001"
+              {...register("barcodeValue")}
+            />
+            <p className="text-sm text-[#6b8f92]">
+              Optional for now. You can enter a printed barcode number manually.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="currentLocation">Current Location</Label>
+            <Input
+              id="currentLocation"
+              placeholder="Sample Reception / Rack A1"
+              {...register("currentLocation")}
+            />
           </div>
 
           <div className="space-y-2 md:col-span-2">

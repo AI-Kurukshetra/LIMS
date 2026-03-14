@@ -65,9 +65,22 @@ export async function PATCH(
     return NextResponse.json({ error: "Sample not found." }, { status: 404 });
   }
 
+  if (
+    body.status === "disposed" &&
+    (!body.disposalReason || typeof body.disposalReason !== "string" || !body.disposalReason.trim())
+  ) {
+    return NextResponse.json(
+      { error: "Disposal reason is required when the sample is disposed." },
+      { status: 400 }
+    );
+  }
+
   const { data, error } = await updateRecord(supabase, params.id, {
     status: body.status,
-    assignedScientistId: body.assignedScientistId ?? undefined
+    assignedScientistId: body.assignedScientistId ?? undefined,
+    currentLocation: body.currentLocation ?? undefined,
+    disposalReason: body.disposalReason ?? undefined,
+    disposedBy: session.profile.id
   });
 
   if (error || !data) {
@@ -80,8 +93,19 @@ export async function PATCH(
     activityParts.push(`Status changed from ${existing.data.status} to ${body.status}.`);
   }
 
+  if (
+    Object.prototype.hasOwnProperty.call(body, "currentLocation") &&
+    body.currentLocation !== existing.data.current_location
+  ) {
+    activityParts.push(`Location changed to ${body.currentLocation || "not specified"}.`);
+  }
+
   if (Object.prototype.hasOwnProperty.call(body, "assignedScientistId")) {
     activityParts.push("Scientist assignment was updated.");
+  }
+
+  if (body.status === "disposed") {
+    activityParts.push(`Disposal reason recorded: ${body.disposalReason}.`);
   }
 
   if (activityParts.length > 0) {
