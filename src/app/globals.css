@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 174 27% 97%;
+    --foreground: 194 43% 16%;
+    --muted: 175 31% 93%;
+    --muted-foreground: 189 18% 41%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 194 43% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 194 43% 16%;
+    --border: 176 25% 86%;
+    --input: 176 25% 86%;
+    --primary: 192 60% 18%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 176 46% 49%;
+    --secondary-foreground: 194 43% 16%;
+    --accent: 175 39% 92%;
+    --accent-foreground: 194 43% 16%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --ring: 176 46% 49%;
+    --radius: 1.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
+    /* Keep the overall look calm and science-focused instead of dark and heavy. */
+    background-image:
+      radial-gradient(circle at top left, rgba(77, 195, 187, 0.2), transparent 30%),
+      radial-gradient(circle at 85% 15%, rgba(15, 64, 74, 0.12), transparent 22%),
+      linear-gradient(180deg, #f4fbfa 0%, #edf7f5 52%, #f7fbfb 100%);
+  }
+}
